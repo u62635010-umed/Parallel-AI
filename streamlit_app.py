@@ -97,7 +97,7 @@ app_graph = workflow.compile()
 
 # Setup Page Configuration
 st.set_page_config(
-    page_title="LangGraph Premium Explainer",
+    page_title="🧠 Parallel Explainer",
     page_icon="🧠",
     layout="wide",
 )
