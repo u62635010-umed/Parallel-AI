@@ -173,6 +173,7 @@ with col1:
                             "action": "explain"
                         })
                         st.session_state.explanation = resp["explanation"]
+                        st.rerun()
                     except Exception as e:
                         st.error(f"❌ Explainer Error: {e}")
     st.markdown('</div>', unsafe_allow_html=True)
