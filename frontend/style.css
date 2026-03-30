@@ -1,0 +1,71 @@
+/* Glassmorphism and Premium Styling for Streamlit */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #8b5cf6;
+    --background-blur: blur(10px);
+    --card-bg: rgba(255, 255, 255, 0.05); /* Dark mode card */
+    --text-color: #f8fafc;
+}
+
+html, body, [data-testid="stAppViewContainer"] {
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    color: var(--text-color);
+}
+
+/* Glass Header */
+[data-testid="stHeader"] {
+    background: rgba(15, 23, 42, 0.5) !important;
+    backdrop-filter: var(--background-blur);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Chat Input Styling */
+[data-testid="stChatInput"] {
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: var(--background-blur);
+}
+
+/* Custom Buttons (Explainer Points) */
+.stButton > button {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    opacity: 0.9;
+}
+
+/* Chat Messages */
+[data-testid="stChatMessage"] {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-radius: 15px !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    margin-bottom: 10px !important;
+}
+
+/* Information/Success Boxes */
+.stAlert {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 15px !important;
+    backdrop-filter: var(--background-blur);
+}
+
+/* Hide Streamlit Branding */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
