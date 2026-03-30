@@ -6,3 +6,4 @@ pydantic
 typing-extensions
 langchain-core
 langchain-google-genai
+groq

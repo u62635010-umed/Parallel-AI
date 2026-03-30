@@ -2,8 +2,7 @@ import streamlit as st
 import os
 from typing import TypedDict, Optional, Literal
 from langgraph.graph import StateGraph, START, END
-from google import genai
-from google.genai import types
+from groq import Groq
 from dotenv import load_dotenv
 
 # Load local .env for development, Streamlit Cloud uses st.secrets
@@ -18,25 +17,40 @@ class AgentState(TypedDict):
     selected_point: Optional[int]
     explanation: Optional[str]
 
-# Initialize Gemini Client (using st.secrets for Streamlit Cloud)
-api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
+# Initialize API Key
+api_key = os.getenv("GROQ_API_KEY")
 if not api_key:
-    st.error("❌ GOOGLE_API_KEY not found. Please set it in st.secrets or a .env file.")
-    st.stop()
+    try:
+        api_key = st.secrets.get("GROQ_API_KEY")
+    except Exception:
+        pass
 
-client = genai.Client(api_key=api_key)
-model_id = "gemini-1.5-flash"  # Using stable flash model
+# Fallback: Sidebar input for premium user experience
+if not api_key:
+    with st.sidebar:
+        st.header("🔑 Configuration")
+        st.markdown("Please enter your Groq API Key to start exploring.")
+        api_key = st.text_input("GROQ_API_KEY", type="password")
+        if not api_key:
+            st.info("💡 You can get an API key from [Groq Console](https://console.groq.com/).")
+            st.stop()
+
+client = Groq(api_key=api_key)
+model_id = "llama-3.3-70b-versatile"  # High-performance Groq model
 
 def main_agent(state: AgentState) -> AgentState:
     prompt = """Answer the user query in exactly 5 clear and concise points.
 Make sure the points are numbered 1 to 5."""
     
-    response = client.models.generate_content(
+    response = client.chat.completions.create(
         model=model_id,
-        contents=[prompt, state["user_input"]]
+        messages=[
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": state["user_input"]}
+        ]
     )
     
-    return {"main_response": response.text}
+    return {"main_response": response.choices[0].message.content}
 
 def explainer_agent(state: AgentState) -> AgentState:
     prompt = f"""Given the original question and its answer, explain ONLY point {state['selected_point']} in simple terms with examples.
@@ -45,15 +59,15 @@ Original Question: {state['user_input']}
 Main Answer: {state['main_response']}
 """
     
-    response = client.models.generate_content(
+    response = client.chat.completions.create(
         model=model_id,
-        config=types.GenerateContentConfig(
-            system_instruction="You are a helpful explainer assistant."
-        ),
-        contents=prompt
+        messages=[
+            {"role": "system", "content": "You are a helpful explainer assistant."},
+            {"role": "user", "content": prompt}
+        ]
     )
     
-    return {"explanation": response.text}
+    return {"explanation": response.choices[0].message.content}
 
 def route_action(state: AgentState) -> str:
     if state.get("action") == "explain":
