@@ -54,10 +54,5 @@ streamlit run streamlit_app.py
 2.  **Explainer Agent**: Waits for your selection. When a point is clicked, it receives the original context and deep-dives specifically into that atomic point.
 3.  **State Management**: LangGraph ensures that the explanation state and the main conversation state remain perfectly synchronized.
 
----
 
-> [!TIP]
-> Use the sidebar configuration if you need to quickly swap API keys during development.
 
----
-*Built with ❤️ by Antigravity*
